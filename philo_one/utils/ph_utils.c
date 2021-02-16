@@ -22,8 +22,9 @@ int		ph_strlen(const char *str)
 	return (i);
 }
 
-void	print_line(char *str)
+void	print_line(char *str, int nextline)
 {
 	write(1, str, ph_strlen(str));
-	write(1, "\n", 1);
+	if (nextline)
+		write(1, "\n", 1);
 }

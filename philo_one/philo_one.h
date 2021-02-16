@@ -31,7 +31,10 @@ typedef struct	s_data
 }				t_data;
 
 int				ph_strlen(const char *str);
-void			print_line(char *str);
+void			print_line(char *str, int nextline);
 int				ph_atoi(const char *str);
+char 			*ph_itoa(long n);
+void			action_print(long program_start_time, int pnum, int action);
+long			get_time();
 
 #endif

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "philo_one.h"
 
 /*
@@ -20,7 +21,7 @@ static int		get_args(int argc, char **argv, t_data *data)
 {
 	if (argc < 5 || argc > 6)
 	{
-		print_line("Wrong number of arguments!");
+		print_line("Wrong number of arguments!", 1);
 		return (1);
 	}
 	data->pnum = ph_atoi(argv[1]);
@@ -33,7 +34,7 @@ static int		get_args(int argc, char **argv, t_data *data)
 		data->notepme = -1;
 	if (!data->pnum || !data->ttd || !data->tte || !data->tts || !data->notepme)
 	{
-		print_line("Wrong aguments format!");
+		print_line("Wrong aguments format!", 1);
 		return (1);
 	}
 	return (0);
@@ -42,7 +43,10 @@ static int		get_args(int argc, char **argv, t_data *data)
 int				main(int argc, char **argv)
 {
 	t_data	data;
+	long	program_start_time;
 
+	program_start_time = get_time();
+	action_print(program_start_time, 1, 1);
 	if (get_args(argc, argv, &data))
 		return (1);
 	return (0);
