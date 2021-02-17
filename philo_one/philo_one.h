@@ -13,6 +13,10 @@
 #ifndef PHILO_ONE_PHILO_ONE_H
 # define PHILO_ONE_PHILO_ONE_H
 
+#include <pthread.h>
+
+pthread_mutex_t	g_mutex;
+
 /*
 **	pnum	-> number of philosophers
 **	ttd		-> time to die
@@ -21,20 +25,41 @@
 **	notepme	-> number of times each philosopher must eat
 */
 
-typedef struct	s_data
+typedef struct		s_data
 {
-	int			pnum;
-	int			ttd;
-	int			tte;
-	int			tts;
-	int			notepme;
-}				t_data;
+	int				pnum;
+	int				ttd;
+	int				tte;
+	int				tts;
+	int				notepme;
+	long			pstime;
+	pthread_mutex_t	*forks;
+}					t_data;
 
-int				ph_strlen(const char *str);
-void			print_line(char *str, int nextline);
-int				ph_atoi(const char *str);
-char 			*ph_itoa(long n);
-void			action_print(long program_start_time, int pnum, int action);
-long			get_time();
+typedef struct		s_philo
+{
+	int				id;
+	int				lfork;
+	int				rfork;
+	pthread_mutex_t	*print;
+	t_data			data;
+	long			etime;
+}					t_philo;
+
+int					ph_strlen(const char *str);
+void				print_line(char *str, int nextline);
+int					ph_atoi(const char *str);
+char 				*ph_itoa(long n);
+long				get_time();
+void				create_philos(t_data data, pthread_mutex_t *print);
+void				action_print(t_philo *philo, int action);
+void				philo_life(t_philo *philo);
+void				create_forks(t_data data, pthread_mutex_t *forks);
+void				ph_take_forks(t_philo *philo);
+void				ph_eat(t_philo *philo);
+void				ph_sleep(t_philo *philo);
+
+
+void				monitoring(t_philo pdata[]);
 
 #endif

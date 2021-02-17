@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include <stdio.h>
+#include <pthread.h>
 #include "philo_one.h"
 
 /*
@@ -21,7 +22,7 @@ static int		get_args(int argc, char **argv, t_data *data)
 {
 	if (argc < 5 || argc > 6)
 	{
-		print_line("Wrong number of arguments!", 1);
+		printf("Wrong number of arguments!");
 		return (1);
 	}
 	data->pnum = ph_atoi(argv[1]);
@@ -32,22 +33,29 @@ static int		get_args(int argc, char **argv, t_data *data)
 		data->notepme = ph_atoi(argv[5]);
 	else
 		data->notepme = -1;
+	data->pstime = get_time();
 	if (!data->pnum || !data->ttd || !data->tte || !data->tts || !data->notepme)
 	{
-		print_line("Wrong aguments format!", 1);
+		printf("Wrong aguments format!");
 		return (1);
 	}
 	return (0);
 }
 
+void			main_cycle(t_data data)
+{
+	pthread_mutex_t print;
+
+	pthread_mutex_init(&print, NULL);
+	create_philos(data, &print);
+}
+
 int				main(int argc, char **argv)
 {
-	t_data	data;
-	long	program_start_time;
+	t_data			data;
 
-	program_start_time = get_time();
-	action_print(program_start_time, 1, 1);
 	if (get_args(argc, argv, &data))
 		return (1);
+	main_cycle(data);
 	return (0);
 }

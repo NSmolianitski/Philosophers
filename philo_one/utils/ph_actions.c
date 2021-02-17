@@ -1,5 +1,40 @@
 #include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "philo_one.h"
+
+void	ph_take_forks(t_philo *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(&philo->data.forks[philo->lfork]);
+		action_print(philo, 1);
+		pthread_mutex_lock(&philo->data.forks[philo->rfork]);
+		action_print(philo, 1);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->data.forks[philo->rfork]);
+		action_print(philo, 1);
+		pthread_mutex_lock(&philo->data.forks[philo->lfork]);
+		action_print(philo, 1);
+	}
+}
+
+void	ph_eat(t_philo *philo)
+{
+	philo->etime = get_time();
+	action_print(philo, 2);
+	usleep(philo->data.tte);
+	pthread_mutex_unlock(&philo->data.forks[philo->rfork]);
+	pthread_mutex_unlock(&philo->data.forks[philo->rfork]);
+}
+
+void	ph_sleep(t_philo *philo)
+{
+	action_print(philo, 3);
+	usleep(philo->data.tts);
+}
 
 long	get_time()
 {
@@ -11,23 +46,22 @@ long	get_time()
 	return (time);
 }
 
-void	action_print(long program_start_time, int pnum, int action)
+void	action_print(t_philo *philo, int action)
 {
 	long	time;
 
-	time = get_time() - program_start_time;
-	print_line(ph_itoa(time), 0);
-	print_line("ms:", 0);
-	print_line(" Philosopher №", 0);
-	print_line(ph_itoa(pnum), 0);
+	pthread_mutex_lock(philo->print);
+	time = get_time() - philo->data.pstime;
+	printf("%ld ms: Philosopher №%d", time, philo->id);
 	if (action == 1)
-		print_line(" has taken a fork", 1);
+		printf(" has taken a fork\n");
 	else if (action == 2)
-		print_line(" is eating", 1);
+		printf(" is eating\n");
 	else if (action == 3)
-		print_line(" is sleeping", 1);
+		printf(" is sleeping\n");
 	else if (action == 4)
-		print_line(" is thinking", 1);
+		printf(" is thinking\n");
 	else if (action == 5)
-		print_line(" died", 1);
+		printf(" died\n");
+	pthread_mutex_unlock(philo->print);
 }
