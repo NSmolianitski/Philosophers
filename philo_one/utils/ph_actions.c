@@ -1,6 +1,3 @@
-#include <sys/time.h>
-#include <stdio.h>
-#include <unistd.h>
 #include "philo_one.h"
 
 void	ph_take_forks(t_philo *philo)
@@ -25,6 +22,7 @@ void	ph_eat(t_philo *philo)
 {
 	action_print(philo, 2);
 	philo->etime = get_time();
+	++philo->ecount;
 	ph_usleep(philo->data.tte);
 	pthread_mutex_unlock(&philo->data.forks[philo->rfork]);
 	pthread_mutex_unlock(&philo->data.forks[philo->lfork]);

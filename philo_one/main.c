@@ -29,6 +29,7 @@ static int		get_args(int argc, char **argv, t_data *data)
 	data->ttd = ph_atoi(argv[2]);
 	data->tte = ph_atoi(argv[3]);
 	data->tts = ph_atoi(argv[4]);
+	data->is_end = 0;
 	if (argc == 6)
 		data->notepme = ph_atoi(argv[5]);
 	else

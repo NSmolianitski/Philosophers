@@ -29,7 +29,7 @@ static int	get_num_of_digits(long n)
 
 static int	is_min(char *str, long *n, int *i)
 {
-	if (*n == -9223372036854775808)
+	if (*n == -9223372036854775807)
 	{
 		*n = 9223372036854775807;
 		str[0] = '-';

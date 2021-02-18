@@ -33,6 +33,7 @@ typedef struct		s_data
 	int				tts;
 	int				notepme;
 	long			pstime;
+	int				is_end;
 	pthread_mutex_t	*forks;
 }					t_data;
 
@@ -44,6 +45,7 @@ typedef struct		s_philo
 	pthread_mutex_t	*print;
 	t_data			data;
 	long			etime;
+	int				ecount;
 }					t_philo;
 
 int					ph_strlen(const char *str);
@@ -53,7 +55,7 @@ char 				*ph_itoa(long n);
 long				get_time();
 void				create_philos(t_data data, pthread_mutex_t *print);
 void				action_print(t_philo *philo, int action);
-void				philo_life(t_philo *philo);
+void				*philo_life(t_philo *philo);
 void				create_forks(t_data data, pthread_mutex_t *forks);
 void				ph_take_forks(t_philo *philo);
 void				ph_eat(t_philo *philo);

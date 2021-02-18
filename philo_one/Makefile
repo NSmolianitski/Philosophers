@@ -5,7 +5,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 HEADER	=	philo_one.h
 
-NAME	=	philo_one.a
+NAME	=	philo_one
 
 CC		=	gcc
 
@@ -13,14 +13,16 @@ RM		=	rm -f
 
 CFLAGS	=	-Wall -Wextra -Werror
 
+%.o:		%.c
+			$(CC) $(CFLAGS) -I. -c $< -o $@
+
 $(NAME):	$(OBJS) $(HEADER)
-			ar rc $(NAME) $(OBJS)
-			ranlib $(NAME)
+			$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 all:		$(NAME)
 
 clean:
-			$(RM) $(OBJS) $(BOBJS)
+			$(RM) $(OBJS)
 
 fclean:		clean
 			$(RM) $(NAME)
