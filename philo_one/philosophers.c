@@ -8,11 +8,12 @@ void	fill_philosopher_data(t_data data, pthread_mutex_t *print, t_philo *philo, 
 	philo->print = print;
 	philo->id = i + 1;
 	philo->lfork = i;
-	philo->etime = data.pstime;
+	philo->etime = get_time();
 	if (i)
 		philo->rfork = i - 1;
 	else
 		philo->rfork = data.pnum - 1;
+	action_print(philo, 5);
 }
 
 void	philo_life(t_philo *philo)
@@ -22,7 +23,7 @@ void	philo_life(t_philo *philo)
 		ph_take_forks(philo);
 		ph_eat(philo);
 		ph_sleep(philo);
-//		usleep(1000000);
+		ph_think(philo);
 	}
 }
 
@@ -75,6 +76,7 @@ void	create_philos(t_data data, pthread_mutex_t *print)
 	{
 		fill_philosopher_data(data, print, &philos_data[i], i);
 		pthread_create(&philos_arr[i], NULL, philo_life, &philos_data[i]);
+		ph_usleep(20);
 		++i;
 	}
 	death_checker(data, philos_data);

@@ -10,14 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "unistd.h"
+#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
+#include "philo_one.h"
 
-int		ph_strlen(const char *str)
+long	get_time()
 {
-	int	i;
+	struct timeval	time_struct;
+	long			time;
 
-	i = 0;
-	while (str[i])
-		++i;
-	return (i);
+	gettimeofday(&time_struct, NULL);
+	time = (time_struct.tv_sec * 1000) + (time_struct.tv_usec / 1000);
+	return (time);
+}
+
+void	ph_usleep(long sleep_time)
+{
+	usleep(sleep_time * 1000);
+}
+
+void	action_print(t_philo *philo, int action)
+{
+	long	time;
+
+	pthread_mutex_lock(philo->print);
+	time = get_time() - philo->data.pstime;
+	printf("%ld ms: Philosopher №%d", time, philo->id);
+	if (action == 1)
+		printf(" has taken a fork\n");
+	else if (action == 2)
+		printf(" is eating\n");
+	else if (action == 3)
+		printf(" is sleeping\n");
+	else if (action == 4)
+		printf(" is thinking\n");
+	else if (action == 5)
+		printf(" died\n");
+	pthread_mutex_unlock(philo->print);
 }

@@ -58,7 +58,8 @@ void				create_forks(t_data data, pthread_mutex_t *forks);
 void				ph_take_forks(t_philo *philo);
 void				ph_eat(t_philo *philo);
 void				ph_sleep(t_philo *philo);
-
+void				ph_think(t_philo *philo);
+void				ph_usleep(long sleep_time);
 
 void				monitoring(t_philo pdata[]);
 
