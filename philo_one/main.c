@@ -43,20 +43,14 @@ static int		get_args(int argc, char **argv, t_data *data)
 	return (0);
 }
 
-void			main_cycle(t_data data)
-{
-	pthread_mutex_t print;
-
-	pthread_mutex_init(&print, NULL);
-	create_philos(data, &print);
-}
-
 int				main(int argc, char **argv)
 {
 	t_data			data;
+	pthread_mutex_t print;
 
 	if (get_args(argc, argv, &data))
 		return (1);
-	main_cycle(data);
+	pthread_mutex_init(&print, NULL);
+	create_philos(data, &print);
 	return (0);
 }

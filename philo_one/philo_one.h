@@ -15,14 +15,15 @@
 
 #include <pthread.h>
 
-pthread_mutex_t	g_mutex;
-
 /*
 **	pnum	-> number of philosophers
 **	ttd		-> time to die
 **	tte		-> time to eat
 **	tts		-> time to sleep
 **	notepme	-> number of times each philosopher must eat
+**	pstime	-> program start time
+**	is_end	-> flag for ending program
+**	forks	-> forks array
 */
 
 typedef struct		s_data
@@ -48,10 +49,7 @@ typedef struct		s_philo
 	int				ecount;
 }					t_philo;
 
-int					ph_strlen(const char *str);
-void				print_line(char *str, int nextline);
 int					ph_atoi(const char *str);
-char 				*ph_itoa(long n);
 long				get_time();
 void				create_philos(t_data data, pthread_mutex_t *print);
 void				action_print(t_philo *philo, int action);
@@ -62,7 +60,7 @@ void				ph_eat(t_philo *philo);
 void				ph_sleep(t_philo *philo);
 void				ph_think(t_philo *philo);
 void				ph_usleep(long sleep_time);
-
-void				monitoring(t_philo pdata[]);
+void				stop_threads(t_data data, pthread_t philos_arr[]);
+void				fill_philosopher_data(t_data data, pthread_mutex_t *print, t_philo *philo, int i);
 
 #endif

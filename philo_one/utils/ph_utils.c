@@ -34,7 +34,6 @@ void	action_print(t_philo *philo, int action)
 {
 	long	time;
 
-	pthread_mutex_lock(philo->print);
 	time = get_time() - philo->data.pstime;
 	printf("%ld ms: Philosopher №%d", time, philo->id);
 	if (action == 1)
@@ -47,5 +46,30 @@ void	action_print(t_philo *philo, int action)
 		printf(" is thinking\n");
 	else if (action == 5)
 		printf(" died\n");
-	pthread_mutex_unlock(philo->print);
+}
+
+void	stop_threads(t_data data, pthread_t philos_arr[])
+{
+	int		i;
+
+	i = 0;
+	while (i < data.pnum)
+	{
+		pthread_detach(philos_arr[i]);
+		++i;
+	}
+}
+
+void	fill_philosopher_data(t_data data, pthread_mutex_t *print, t_philo *philo, int i)
+{
+	philo->data = data;
+	philo->print = print;
+	philo->id = i + 1;
+	philo->lfork = i;
+	philo->etime = get_time();
+	philo->ecount = 0;
+	if (i)
+		philo->rfork = i - 1;
+	else
+		philo->rfork = data.pnum - 1;
 }

@@ -1,20 +1,6 @@
 #include <unistd.h>
 #include "philo_one.h"
 
-void	fill_philosopher_data(t_data data, pthread_mutex_t *print, t_philo *philo, int i)
-{
-	philo->data = data;
-	philo->print = print;
-	philo->id = i + 1;
-	philo->lfork = i;
-	philo->etime = get_time();
-	philo->ecount = 0;
-	if (i)
-		philo->rfork = i - 1;
-	else
-		philo->rfork = data.pnum - 1;
-}
-
 void	*philo_life(t_philo *philo)
 {
 	while (1)
@@ -39,15 +25,16 @@ void	death_checker(t_philo philos_data[])
 		current_time = get_time();
 		while (i < philos_data->data.pnum)
 		{
+			pthread_mutex_lock(philos_data[i].print);
 			if ((current_time - philos_data[i].etime) > philos_data[i].data.ttd)
 			{
 				action_print(&philos_data[i], 5);
-				pthread_mutex_lock(philos_data[i].print);
 				philos_data[i].data.is_end = 1;
 				return ;
 			}
 			if (philos_data[i].data.is_end)
 				return ;
+			pthread_mutex_unlock(philos_data[i].print);
 			++i;
 		}
 	}
@@ -81,14 +68,16 @@ void	*check_eat_times(t_philo philos_data[])
 	}
 }
 
-void	stop_threads(t_data data, pthread_t philos_arr[])
+void	put_philos_to_table(t_data data, pthread_mutex_t *print, t_philo philos_data[], pthread_t philos_arr[])
 {
 	int		i;
 
 	i = 0;
 	while (i < data.pnum)
 	{
-		pthread_detach(philos_arr[i]);
+		fill_philosopher_data(data, print, &philos_data[i], i);
+		pthread_create(&philos_arr[i], NULL, (void *)philo_life, &philos_data[i]);
+		ph_usleep(10);
 		++i;
 	}
 }
@@ -108,14 +97,7 @@ void	create_philos(t_data data, pthread_mutex_t *print)
 		++i;
 	}
 	data.forks = forks;
-	i = 0;
-	while (i < data.pnum)
-	{
-		fill_philosopher_data(data, print, &philos_data[i], i);
-		pthread_create(&philos_arr[i], NULL, (void *)philo_life, &philos_data[i]);
-		ph_usleep(20);
-		++i;
-	}
+	put_philos_to_table(data, print, philos_data, philos_arr);
 	pthread_create(&eat_checker, NULL, (void *)check_eat_times, philos_data);
 	death_checker(philos_data);
 	stop_threads(data, philos_arr);
