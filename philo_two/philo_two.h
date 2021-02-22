@@ -14,6 +14,7 @@
 # define PHILO_ONE_PHILO_ONE_H
 
 # include <pthread.h>
+# include <semaphore.h>
 
 /*
 **	pnum	-> number of philosophers
@@ -24,7 +25,6 @@
 **	pstime	-> program start time
 **	is_end	-> flag for ending program
 **	forks	-> forks array
-**	block	-> mutex for taking forks
 */
 
 typedef struct		s_data
@@ -36,37 +36,32 @@ typedef struct		s_data
 	int				notepme;
 	long			pstime;
 	int				is_end;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	*block;
+	sem_t			*forks;
+	sem_t			*block;
+	sem_t			*print;
+	int				forks_num;
 }					t_data;
 
 typedef struct		s_philo
 {
 	int				id;
-	int				lfork;
-	int				rfork;
-	pthread_mutex_t	*print;
-	t_data			data;
+	t_data			*data;
 	long			etime;
 	int				ecount;
-	int				eatperm;
 }					t_philo;
 
 int					ph_atoi(const char *str);
 long				get_time();
-void				create_philos(t_data data, pthread_mutex_t *print);
-void				action_print(t_philo *philo, int action);
-void				print_philo_death(t_philo *philo);
-void				*philo_life(t_philo *philo);
-void				create_forks(t_data data, pthread_mutex_t *forks);
+void				death_checker(t_philo philo[]);
+void				print_action(t_philo philo, int num);
+void				fill_philosopher_data(t_data *data, t_philo *philo, int i);
+void				ph_usleep(long sleep_time);
 void				ph_take_forks(t_philo *philo);
 void				ph_eat(t_philo *philo);
 void				ph_sleep(t_philo *philo);
 void				ph_think(t_philo *philo);
-void				ph_usleep(long sleep_time);
-void				waiter_cycle(t_philo philos_data[]);
-void				remove_philo_and_forks(t_data data, pthread_t philos_arr[]);
-void				fill_philosopher_data(t_data data,
-						pthread_mutex_t *print, t_philo *philo, int i);
+void				ph_die(t_philo *philo);
+void				create_philos(t_data *data, t_philo *philos_data, pthread_t *philos_threads);
+void				stop_threads(t_data data, pthread_t *philos_threads);
 
 #endif

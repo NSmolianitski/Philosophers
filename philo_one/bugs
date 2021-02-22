@@ -1,0 +1,153 @@
+0 ms: Philosopher №1 has taken a fork
+0 ms: Philosopher №1 has taken a fork
+0 ms: Philosopher №1 is eating
+I am 1, I ate 1 times
+10 ms: Philosopher №2 has taken a fork
+202 ms: Philosopher №1 is sleeping
+202 ms: Philosopher №4 has taken a fork
+202 ms: Philosopher №4 has taken a fork
+202 ms: Philosopher №4 is eating
+I am 4, I ate 1 times
+202 ms: Philosopher №2 has taken a fork
+202 ms: Philosopher №2 is eating
+I am 2, I ate 1 times
+403 ms: Philosopher №2 is sleeping
+403 ms: Philosopher №3 has taken a fork
+403 ms: Philosopher №1 is thinking
+403 ms: Philosopher №3 has taken a fork
+403 ms: Philosopher №1 has taken a fork
+403 ms: Philosopher №4 is sleeping
+403 ms: Philosopher №1 has taken a fork
+403 ms: Philosopher №1 is eating
+I am 1, I ate 2 times
+403 ms: Philosopher №3 is eating
+I am 3, I ate 1 times
+608 ms: Philosopher №2 is thinking
+608 ms: Philosopher №3 is sleeping
+608 ms: Philosopher №2 has taken a fork
+608 ms: Philosopher №2 has taken a fork
+608 ms: Philosopher №2 is eating
+I am 2, I ate 2 times
+608 ms: Philosopher №1 is sleeping
+608 ms: Philosopher №4 is thinking
+608 ms: Philosopher №4 has taken a fork
+608 ms: Philosopher №4 has taken a fork
+608 ms: Philosopher №4 is eating
+I am 4, I ate 2 times
+812 ms: Philosopher №3 is thinking
+812 ms: Philosopher №2 is sleeping
+812 ms: Philosopher №4 is sleeping
+812 ms: Philosopher №3 has taken a fork
+812 ms: Philosopher №3 has taken a fork
+812 ms: Philosopher №3 is eating
+I am 3, I ate 2 times
+812 ms: Philosopher №1 is thinking
+813 ms: Philosopher №1 has taken a fork
+813 ms: Philosopher №1 has taken a fork
+813 ms: Philosopher №1 is eating
+I am 1, I ate 3 times
+1014 ms: Philosopher №2 is thinking
+1014 ms: Philosopher №2 has taken a fork
+1014 ms: Philosopher №2 has taken a fork
+1014 ms: Philosopher №2 is eating
+I am 2, I ate 3 times
+1014 ms: Philosopher №4 is thinking
+1014 ms: Philosopher №4 has taken a fork
+1014 ms: Philosopher №4 has taken a fork
+1014 ms: Philosopher №4 is eating
+I am 4, I ate 3 times
+1014 ms: Philosopher №3 is sleeping
+1014 ms: Philosopher №1 is sleeping
+1214 ms: Philosopher №2 is sleeping
+1214 ms: Philosopher №4 is sleeping
+1214 ms: Philosopher №1 is thinking
+1214 ms: Philosopher №1 has taken a fork
+1214 ms: Philosopher №1 has taken a fork
+1214 ms: Philosopher №1 is eating
+I am 1, I ate 4 times
+1214 ms: Philosopher №3 is thinking
+1214 ms: Philosopher №3 has taken a fork
+1214 ms: Philosopher №3 has taken a fork
+1214 ms: Philosopher №3 is eating
+I am 3, I ate 3 times
+1415 ms: Philosopher №4 is thinking
+1415 ms: Philosopher №4 has taken a fork
+1415 ms: Philosopher №4 has taken a fork
+1415 ms: Philosopher №4 is eating
+I am 4, I ate 4 times
+1415 ms: Philosopher №2 is thinking
+1415 ms: Philosopher №2 has taken a fork
+1415 ms: Philosopher №2 has taken a fork
+1415 ms: Philosopher №2 is eating
+I am 2, I ate 4 times
+1415 ms: Philosopher №1 is sleeping
+1416 ms: Philosopher №3 is sleeping
+1619 ms: Philosopher №4 is sleeping
+1619 ms: Philosopher №2 is sleeping
+1619 ms: Philosopher №1 is thinking
+1619 ms: Philosopher №1 has taken a fork
+1619 ms: Philosopher №1 has taken a fork
+1619 ms: Philosopher №1 is eating
+I am 1, I ate 5 times
+1619 ms: Philosopher №3 is thinking
+1619 ms: Philosopher №3 has taken a fork
+1619 ms: Philosopher №3 has taken a fork
+1619 ms: Philosopher №3 is eating
+I am 3, I ate 4 times
+1819 ms: Philosopher №4 is thinking
+1819 ms: Philosopher №2 is thinking
+1824 ms: Philosopher №1 is sleeping
+1824 ms: Philosopher №4 has taken a fork
+1824 ms: Philosopher №4 has taken a fork
+1824 ms: Philosopher №4 is eating
+I am 4, I ate 5 times
+1825 ms: Philosopher №2 has taken a fork
+1825 ms: Philosopher №2 has taken a fork
+1825 ms: Philosopher №2 is eating
+I am 2, I ate 5 times
+1825 ms: Philosopher №3 is sleeping
+2025 ms: Philosopher №1 is thinking
+2029 ms: Philosopher №2 is sleeping
+2029 ms: Philosopher №3 is thinking
+2029 ms: Philosopher №3 has taken a fork
+2029 ms: Philosopher №4 is sleeping
+2029 ms: Philosopher №3 has taken a fork
+2029 ms: Philosopher №3 is eating
+I am 3, I ate 5 times
+2029 ms: Philosopher №1 has taken a fork
+2029 ms: Philosopher №1 has taken a fork
+2029 ms: Philosopher №1 is eating
+I am 1, I ate 6 times
+2229 ms: Philosopher №4 is thinking
+2229 ms: Philosopher №2 is thinking
+2229 ms: Philosopher №2 has taken a fork
+2229 ms: Philosopher №3 is sleeping
+2229 ms: Philosopher №1 is sleeping
+2229 ms: Philosopher №4 has taken a fork
+2229 ms: Philosopher №4 has taken a fork
+2229 ms: Philosopher №4 is eating
+I am 4, I ate 6 times
+2230 ms: Philosopher №2 has taken a fork
+2230 ms: Philosopher №2 is eating
+I am 2, I ate 6 times
+2429 ms: Philosopher №3 is thinking
+2430 ms: Philosopher №1 is thinking
+2431 ms: Philosopher №2 is sleeping
+2431 ms: Philosopher №3 has taken a fork
+2435 ms: Philosopher №4 is sleeping
+2435 ms: Philosopher №3 has taken a fork
+2435 ms: Philosopher №3 is eating
+I am 3, I ate 6 times
+2435 ms: Philosopher №1 has taken a fork
+2435 ms: Philosopher №1 has taken a fork
+2435 ms: Philosopher №1 is eating
+I am 1, I ate 7 times
+2632 ms: Philosopher №2 is thinking
+2640 ms: Philosopher №4 is thinking
+2640 ms: Philosopher №3 is sleeping
+2640 ms: Philosopher №4 died
+
+
+
+////////
+philos_data[0].data.is_end == 1       //NO STOP!!!

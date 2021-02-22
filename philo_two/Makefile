@@ -3,9 +3,9 @@ SRCS	=	utils/ph_actions.c utils/ph_atoi.c utils/ph_utils.c forks.c main.c philos
 
 OBJS	=	$(SRCS:.c=.o)
 
-HEADER	=	philo_one.h
+HEADER	=	philo_two.h
 
-NAME	=	philo_one
+NAME	=	philo_two
 
 CC		=	gcc
 

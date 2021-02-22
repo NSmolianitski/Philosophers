@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <pthread.h>
-#include "philo_one.h"
+#include "philo_two.h"
 
 /*
 **	Checks arguments number and fills data struct
@@ -43,17 +44,28 @@ static int		get_args(int argc, char **argv, t_data *data)
 	return (0);
 }
 
+static void		philosophers_cycle(void)
+{
+	while (1)
+		;
+}
+
 int				main(int argc, char **argv)
 {
 	t_data			data;
-	pthread_mutex_t print;
-	pthread_mutex_t block;
+	pthread_t		*philos_threads;
+	t_philo			*philos_data;
 
 	if (get_args(argc, argv, &data))
 		return (1);
-	pthread_mutex_init(&print, NULL);
-	pthread_mutex_init(&block, NULL);
-	data.block = &block;
-	create_philos(data, &print);
+	philos_threads = malloc(sizeof(pthread_t) * data.pnum);
+	philos_data = malloc(sizeof(t_philo) * data.pnum);
+	data.print = sem_open("print", O_CREAT, 0666, 1);
+	sem_post(data.print);
+	data.block = sem_open("block", O_CREAT, 0666, 1);
+	sem_post(data.block);
+	create_philos(&data, philos_data, philos_threads);
+	philosophers_cycle();
+	stop_threads(data, philos_threads);
 	return (0);
 }
