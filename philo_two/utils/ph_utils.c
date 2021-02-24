@@ -27,7 +27,13 @@ long	get_time(void)
 
 void	ph_usleep(long sleep_time)
 {
-	usleep(sleep_time * 1000);
+	long	sleep_start;
+
+	sleep_start = get_time();
+	while ((get_time() - sleep_start) < sleep_time)
+	{
+		usleep(100);
+	}
 }
 
 void	stop_threads(t_data data, pthread_t *philos_threads)
@@ -48,15 +54,18 @@ void	print_action(t_philo philo, int num)
 
 	sem_wait(philo.data->print);
 	time = get_time() - philo.data->pstime;
-	if (num == 1)
-		printf("%ld Philosopher №%d has taken a fork\n", time, philo.id);
-	else if (num == 2)
-		printf("%ld Philosopher №%d is eating\n", time, philo.id);
-	else if (num == 3)
-		printf("%ld Philosopher №%d is sleeping\n", time, philo.id);
-	else if (num == 4)
-		printf("%ld Philosopher №%d is thinking\n", time, philo.id);
-	else if (num == 5)
-		printf("%ld Philosopher №%d died\n", time, philo.id);
+	if (!philo.data->is_end || num == 5)
+	{
+		if (num == 1)
+			printf("%ld Philosopher №%d has taken a fork\n", time, philo.id);
+		else if (num == 2)
+			printf("%ld Philosopher №%d is eating\n", time, philo.id);
+		else if (num == 3)
+			printf("%ld Philosopher №%d is sleeping\n", time, philo.id);
+		else if (num == 4)
+			printf("%ld Philosopher №%d is thinking\n", time, philo.id);
+		else if (num == 5)
+			printf("%ld Philosopher №%d died\n", time, philo.id);
+	}
 	sem_post(philo.data->print);
 }

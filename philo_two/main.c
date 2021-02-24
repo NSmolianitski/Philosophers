@@ -35,7 +35,6 @@ static int		get_args(int argc, char **argv, t_data *data)
 		data->notepme = ph_atoi(argv[5]);
 	else
 		data->notepme = -1;
-	data->pstime = get_time();
 	if (!data->pnum || !data->ttd || !data->tte || !data->tts || !data->notepme)
 	{
 		printf("Wrong aguments format!");
@@ -44,10 +43,16 @@ static int		get_args(int argc, char **argv, t_data *data)
 	return (0);
 }
 
-static void		philosophers_cycle(void)
+static void		philosophers_cycle(t_philo *philo_data)
 {
-	while (1)
-		;
+	death_checker(philo_data);
+}
+
+static void		init_program(void)
+{
+	sem_unlink("forks");
+	sem_unlink("print");
+	sem_unlink("block");
 }
 
 int				main(int argc, char **argv)
@@ -56,16 +61,17 @@ int				main(int argc, char **argv)
 	pthread_t		*philos_threads;
 	t_philo			*philos_data;
 
+	init_program();
 	if (get_args(argc, argv, &data))
 		return (1);
+	data.forks = sem_open("forks", O_CREAT, 0666, data.pnum);
+	data.forks_num = data.pnum;
 	philos_threads = malloc(sizeof(pthread_t) * data.pnum);
 	philos_data = malloc(sizeof(t_philo) * data.pnum);
 	data.print = sem_open("print", O_CREAT, 0666, 1);
-	sem_post(data.print);
 	data.block = sem_open("block", O_CREAT, 0666, 1);
-	sem_post(data.block);
 	create_philos(&data, philos_data, philos_threads);
-	philosophers_cycle();
+	philosophers_cycle(philos_data);
 	stop_threads(data, philos_threads);
 	return (0);
 }
