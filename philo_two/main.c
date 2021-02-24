@@ -23,7 +23,7 @@ static int		get_args(int argc, char **argv, t_data *data)
 {
 	if (argc < 5 || argc > 6)
 	{
-		printf("Wrong number of arguments!");
+		printf("Wrong number of arguments!\n");
 		return (1);
 	}
 	data->pnum = ph_atoi(argv[1]);
@@ -35,9 +35,9 @@ static int		get_args(int argc, char **argv, t_data *data)
 		data->notepme = ph_atoi(argv[5]);
 	else
 		data->notepme = -1;
-	if (!data->pnum || !data->ttd || !data->tte || !data->tts || !data->notepme)
+	if (data->pnum <= 0 || data->ttd <= 0 || data->tte <= 0 || data->tts <= 0 || data->notepme <= 0)
 	{
-		printf("Wrong aguments format!");
+		printf("Wrong arguments format!\n");
 		return (1);
 	}
 	return (0);
