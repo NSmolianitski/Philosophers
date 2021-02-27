@@ -27,63 +27,45 @@ long	get_time(void)
 
 void	ph_usleep(long sleep_time)
 {
-	usleep(sleep_time * 1000);
+	long	sleep_start;
+
+	sleep_start = get_time();
+	while ((get_time() - sleep_start) < sleep_time)
+	{
+		usleep(100);
+	}
 }
 
-void	action_print(t_philo *philo, int action)
-{
-	long	time;
-
-	pthread_mutex_lock(philo->print);
-	time = get_time() - philo->data.pstime;
-	printf("%ld ms: Philosopher №%d", time, philo->id);
-	if (action == 1)
-		printf(" has taken a fork\n");
-	else if (action == 2)
-		printf(" is eating\n");
-	else if (action == 3)
-		printf(" is sleeping\n");
-	else if (action == 4)
-		printf(" is thinking\n");
-	else if (action == 5)
-		printf(" died\n");
-	pthread_mutex_unlock(philo->print);
-}
-
-void	print_philo_death(t_philo *philo)
-{
-	long	time;
-
-	time = get_time() - philo->data.pstime;
-	printf("%ld ms: Philosopher №%d died\n", time, philo->id);
-}
-
-void	remove_philo_and_forks(t_data data, pthread_t philos_arr[])
+void	stop_threads(t_data data, pthread_t *philos_threads)
 {
 	int		i;
 
 	i = 0;
 	while (i < data.pnum)
 	{
-		pthread_detach(philos_arr[i]);
-		pthread_mutex_destroy(&data.forks[i]);
+		pthread_detach(philos_threads[i]);
 		++i;
 	}
-	pthread_mutex_destroy(data.block);
 }
 
-void	fill_philosopher_data(t_data data, pthread_mutex_t *print,
-				t_philo *philo, int i)
+void	print_action(t_philo philo, int num)
 {
-	philo->data = data;
-	philo->print = print;
-	philo->id = i + 1;
-	philo->lfork = i;
-	philo->etime = get_time();
-	philo->ecount = 0;
-	philo->eatperm = 0;
-	if (i)
-		philo->rfork = i - 1;
-	else
-		philo->rfork = data.pnum - 1;
+	long	time;
+
+	pthread_mutex_lock(&philo.data->print);
+	time = get_time() - philo.data->pstime;
+	if (!philo.data->is_end || num == 5)
+	{
+		if (num == 1)
+			printf("%ld Philosopher №%d has taken a fork\n", time, philo.id);
+		else if (num == 2)
+			printf("%ld Philosopher №%d is eating\n", time, philo.id);
+		else if (num == 3)
+			printf("%ld Philosopher №%d is sleeping\n", time, philo.id);
+		else if (num == 4)
+			printf("%ld Philosopher №%d is thinking\n", time, philo.id);
+		else if (num == 5)
+			printf("%ld Philosopher №%d died\n", time, philo.id);
+	}
+	pthread_mutex_unlock(&philo.data->print);
 }

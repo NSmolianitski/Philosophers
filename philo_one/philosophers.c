@@ -13,76 +13,82 @@
 #include <unistd.h>
 #include "philo_one.h"
 
+void	fill_philosopher_data(t_data *data, t_philo *philo, int i)
+{
+	philo->data = data;
+	philo->etime = data->pstime;
+	philo->id = i + 1;
+	philo->rfork = i - 1;
+	if (!i)
+		philo->rfork = data->pnum - 1;
+	philo->lfork = i;
+	philo->ecount = 0;
+	philo->eat_perm = 0;
+	philo->is_hungry = 1;
+	philo->is_eating = 0;
+}
+
 void	*philo_life(t_philo *philo)
 {
+	while (!philo->data->ready)
+		;
+	philo->etime = philo->data->pstime;
 	while (1)
 	{
-			ph_take_forks(philo);
-			ph_eat(philo);
-			ph_sleep(philo);
-			ph_think(philo);
+		while (!philo->eat_perm)
+			;
+		ph_take_forks(philo);
+		pthread_mutex_unlock(&philo->data->block);
+		ph_eat(philo);
+		ph_sleep(philo);
+		ph_think(philo);
 	}
-	return (0);
 }
 
-void	death_checker(t_philo philos_data[])
+void	waiter_cycle(t_philo *philos_data)
 {
-	long	current_time;
 	int		i;
+	int		queue[philos_data[0].data->pnum];
 
+	init_queue(queue, philos_data[0].data->pnum);
+	philos_data[0].data->pstime = get_time();
+	philos_data[0].data->ready = 1;
 	while (1)
 	{
-		usleep(1000);
 		i = 0;
-		if (philos_data[0].data.is_end == 1)
-			return ;
-		current_time = get_time();
-		while (i < philos_data->data.pnum)
+		while (i < philos_data[0].data->pnum)
 		{
-			pthread_mutex_lock(philos_data[i].print);
-			if ((current_time - philos_data[i].etime) > philos_data[i].data.ttd)
-			{
-				print_philo_death(&philos_data[i]);
-				philos_data[0].data.is_end = 1;
+			if (philos_data[0].data->is_end)
 				return ;
-			}
-			pthread_mutex_unlock(philos_data[i].print);
+			if (philos_data[0].is_hungry)
+				add_to_queue(i, queue, philos_data[0].data->pnum);
+			else
+				remove_from_queue(i, queue, philos_data[0].data->pnum);
 			++i;
 		}
+		prepare_queue(philos_data, queue);
+		philos_data[queue[0]].eat_perm = 1;
+		while (philos_data[queue[0]].eat_perm)
+			;
+		move_queue(queue, philos_data[0].data->pnum);
 	}
 }
 
-void	put_philos_to_table(t_data data, pthread_mutex_t *print,
-				t_philo philos_data[], pthread_t philos_arr[])
+void	create_philos(t_data *data, t_philo *philos_data,
+			pthread_t *philos_threads)
 {
-	int		i;
+	int			i;
+	pthread_t	waiter;
 
 	i = 0;
-	while (i < data.pnum)
+	pthread_mutex_lock(&data->block);
+	while (i < data->pnum)
 	{
-		fill_philosopher_data(data, print, &philos_data[i], i);
-		pthread_create(&philos_arr[i], NULL, (void *)philo_life,
+		fill_philosopher_data(data, &philos_data[i], i);
+		pthread_create(&philos_threads[i], NULL, (void *)philo_life,
 					&philos_data[i]);
-		ph_usleep(20);
 		++i;
 	}
-}
-
-void	create_philos(t_data data, pthread_mutex_t *print)
-{
-	int				i;
-	t_philo			philos_data[data.pnum];
-	pthread_t		philos_arr[data.pnum];
-	pthread_mutex_t	forks[data.pnum];
-
-	i = 0;
-	while (i < data.pnum)
-	{
-		create_forks(data, &forks[i]);
-		++i;
-	}
-	data.forks = forks;
-	put_philos_to_table(data, print, philos_data, philos_arr);
-	death_checker(philos_data);
-	remove_philo_and_forks(data, philos_arr);
+	pthread_create(&waiter, NULL, (void *)waiter_cycle, philos_data);
+	pthread_mutex_unlock(&data->block);
 }

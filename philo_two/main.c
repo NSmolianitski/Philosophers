@@ -35,7 +35,8 @@ static int		get_args(int argc, char **argv, t_data *data)
 		data->notepme = ph_atoi(argv[5]);
 	else
 		data->notepme = -1;
-	if (data->pnum <= 0 || data->ttd <= 0 || data->tte <= 0 || data->tts <= 0 || data->notepme <= 0)
+	if (data->pnum <= 0 || data->ttd <= 0 || data->tte <= 0 ||
+			data->tts <= 0 || (data->notepme <= 0 && argc == 6))
 	{
 		printf("Wrong arguments format!\n");
 		return (1);
