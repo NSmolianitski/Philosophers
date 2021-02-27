@@ -1,5 +1,5 @@
 
-SRCS	=	utils/ph_actions.c utils/ph_atoi.c utils/ph_utils.c main.c philosophers.c utils/queue.c
+SRCS	=	 utils/ph_actions.c utils/ph_atoi.c utils/ph_utils.c utils/queue.c main.c philosophers.c utils/queue2.c utils/death_checker.c
 
 OBJS	=	$(SRCS:.c=.o)
 
