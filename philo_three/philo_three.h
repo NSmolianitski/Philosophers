@@ -41,6 +41,9 @@ typedef struct		s_data
 	sem_t			*print;
 	sem_t			*death;
 	int				forks_num;
+	int				*pids;
+	int				pid_index;
+	int				counter;
 }					t_data;
 
 typedef struct		s_philo
@@ -64,10 +67,9 @@ void				ph_eat(t_philo *philo);
 void				ph_sleep(t_philo *philo);
 void				ph_think(t_philo *philo);
 void				ph_die(t_philo *philo);
-int					*create_philos(t_data *data, t_philo *philos_data);
-void				add_to_queue(int id, int queue[], int pnum);
-void				remove_from_queue(int id, int queue[], int pnum);
-void				move_queue(int queue[], int pnum);
-void				init_queue(int *queue, int pnum);
+void				create_philos(t_data *data, t_philo *philos_data);
+void				kill_philos(pid_t *philos_pids, int pnum);
+void				restart_philo(t_data *data, int i);
+void				*philo_life(t_philo *philo);
 
 #endif

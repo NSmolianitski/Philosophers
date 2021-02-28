@@ -36,15 +36,28 @@ void	ph_usleep(long sleep_time)
 	}
 }
 
-void	stop_threads(t_data data, pthread_t *philos_threads)
+void	restart_philo(t_data *data, int i)
 {
-	int		i;
+	pthread_t	death;
+	t_philo		philo;
+	long		time;
+	long		time2;
 
-	i = 0;
-	while (i < data.pnum)
+	time = get_time();
+	sem_wait(data->death);
+	++data->counter;
+	sem_post(data->death);
+	data->pids[i] = fork();
+	fill_philosopher_data(data, &philo, i);
+	philo.etime = get_time();
+	philo.eat_perm = 0;
+	philo.ecount = data->notepme + 1;
+	time2 = get_time();
+	ph_usleep(data->tte - (time2 - time));
+	if (!data->pids[i])
 	{
-		pthread_detach(philos_threads[i]);
-		++i;
+		pthread_create(&death, NULL, (void *)death_checker, &philo);
+		philo_life(&philo);
 	}
 }
 
@@ -59,7 +72,8 @@ void	print_action(t_philo philo, int num)
 		if (!philo.data->is_end || num == 5)
 		{
 			if (num == 1)
-				printf("%ld Philosopher №%d has taken a fork\n", time, philo.id);
+				printf("%ld Philosopher №%d has taken a fork\n",
+								time, philo.id);
 			else if (num == 2)
 				printf("%ld Philosopher №%d is eating\n", time, philo.id);
 			else if (num == 3)

@@ -25,7 +25,6 @@ void	ph_take_forks(t_philo *philo)
 void	ph_eat(t_philo *philo)
 {
 	print_action(*philo, 2);
-//	philo->eat_perm = 0;
 	++philo->ecount;
 	philo->etime = get_time();
 	ph_usleep(philo->data->tte);

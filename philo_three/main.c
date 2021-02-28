@@ -44,12 +44,6 @@ static int		get_args(int argc, char **argv, t_data *data)
 	return (0);
 }
 
-static void		philosophers_cycle(t_philo *philo_data)
-{
-	while (1)
-		;
-}
-
 static void		remove_sems(void)
 {
 	sem_unlink("forks");
@@ -58,7 +52,7 @@ static void		remove_sems(void)
 	sem_unlink("death");
 }
 
-static void		kill_philos(pid_t *philos_pids, int pnum)
+void			kill_philos(pid_t *philos_pids, int pnum)
 {
 	int		i;
 
@@ -74,8 +68,6 @@ int				main(int argc, char **argv)
 {
 	t_data			data;
 	t_philo			*philos_data;
-	pid_t			*philos_pids;
-	int				status;
 
 	remove_sems();
 	if (get_args(argc, argv, &data))
@@ -86,9 +78,11 @@ int				main(int argc, char **argv)
 	data.print = sem_open("print", O_CREAT, 0666, 1);
 	data.block = sem_open("block", O_CREAT, 0666, 1);
 	data.death = sem_open("death", O_CREAT, 0666, 1);
-	philos_pids = create_philos(&data, philos_data);
-	waitpid(-1, &status, 0);
-	kill_philos(philos_pids, data.pnum);
+	data.counter = 0;
+	create_philos(&data, philos_data);
+	while (data.counter != data.pnum)
+		;
+	kill_philos(data.pids, data.pnum);
 	remove_sems();
 	return (0);
 }

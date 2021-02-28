@@ -22,44 +22,31 @@ void	fill_philosopher_data(t_data *data, t_philo *philo, int i)
 	philo->etime = data->pstime;
 	philo->id = i + 1;
 	philo->ecount = 0;
-	philo->eat_perm = 0;
+	philo->eat_perm = 1;
 	philo->is_hungry = 1;
 }
 
 void	death_checker(t_philo *philo)
 {
 	long	time;
-	int		counter;
 
-//	sem_wait(philo->data->block);
-//	sem_post(philo->data->block);
-//	ph_usleep(50);
-	counter = 0;
 	while (1)
 	{
-		if (philo->ecount >= philo->data->notepme)
-			++counter;
-		else
-			counter = 0;
-//		sem_wait(philo->data->block);
 		time = get_time();
-//		sem_wait(philo->data->death);
+		sem_post(philo->data->block);
+		sem_wait(philo->data->death);
 		if ((time - philo->etime) > philo->data->ttd)
 		{
 			ph_die(philo);
 			sem_wait(philo->data->print);
-//			sem_post(philo->data->block);
-			philo->data->is_end = 1;
-//			sem_post(philo->data->print);
-			return ;
+			exit(0);
 		}
 		sem_post(philo->data->death);
-//		sem_post(philo->data->block);
-		if (philo->data->notepme != -1 && counter >= philo->data->pnum)
+		if (philo->data->notepme != -1 && philo->ecount == philo->data->notepme)
 		{
-			sem_wait(philo->data->block);
-			philo->data->is_end = 1;
-			return ;
+			sem_post(philo->data->forks);
+			sem_post(philo->data->forks);
+			exit(1);
 		}
 	}
 }
@@ -68,78 +55,71 @@ void	*philo_life(t_philo *philo)
 {
 	while (1)
 	{
-		if (philo->data->is_end)
-			exit(0);
-//		while (!philo->eat_perm)
-//			;
-		while (1)
+		if (philo->eat_perm)
 		{
-			sem_wait(philo->data->block);
-			if (philo->data->forks_num < 2)
+			if (philo->data->is_end)
+				exit(0);
+			while (1)
 			{
-				sem_post(philo->data->block);
-				continue;
+				sem_wait(philo->data->block);
+				if (philo->data->forks_num < 2)
+				{
+					sem_post(philo->data->block);
+					continue ;
+				}
+				else
+					break ;
 			}
-			else
-				break ;
+			ph_take_forks(philo);
+			sem_post(philo->data->block);
+			ph_eat(philo);
 		}
-		ph_take_forks(philo);
-		sem_post(philo->data->block);
-		ph_eat(philo);
+		philo->eat_perm = 1;
 		ph_sleep(philo);
 		ph_think(philo);
 	}
 }
 
-void	waiter_cycle(t_philo *philos_data)
+void	philo_wait(t_data *data)
 {
-	int		i;
-	int		queue[philos_data[0].data->pnum];
+	int			status;
+	int			i;
 
-	init_queue(queue, philos_data[0].data->pnum);
-	philos_data[0].data->pstime = get_time();
-	sem_post(philos_data[0].data->block);
-	while (1)
+	i = data->pid_index;
+	waitpid(data->pids[i], &status, 0);
+	status = WEXITSTATUS(status);
+	if (!status)
 	{
-		i = 0;
-		while (i < philos_data[0].data->pnum)
-		{
-			if (philos_data[0].data->is_end)
-				return ;
-			if (philos_data[0].is_hungry)
-				add_to_queue(i, queue, philos_data[0].data->pnum);
-			else
-				remove_from_queue(i, queue, philos_data[0].data->pnum);
-			++i;
-		}
-		philos_data[queue[0]].eat_perm = 1;
-		while (philos_data[queue[0]].eat_perm)
-			;
-		move_queue(queue, philos_data[0].data->pnum);
+		kill_philos(data->pids, data->pnum);
+		exit(0);
 	}
+	else if (status == 1)
+		restart_philo(data, i);
 }
 
-int		*create_philos(t_data *data, t_philo *philos_data)
+void	create_philos(t_data *data, t_philo *philos_data)
 {
 	int			i;
 	pthread_t	death;
-	pthread_t	waiter;
-	pid_t		*philos_pids;
+	pthread_t	*philos_arr;
 
 	i = 0;
-	philos_pids = malloc(sizeof(int) * data->pnum);
+	philos_arr = malloc(sizeof(pthread_t) * data->pnum);
+	data->pids = malloc(sizeof(int) * data->pnum);
 	data->pstime = get_time();
 	while (i < data->pnum)
 	{
 		fill_philosopher_data(data, &philos_data[i], i);
-		philos_pids[i] = fork();
-		if (!philos_pids[i])
+		data->pids[i] = fork();
+		if (!data->pids[i])
 		{
-			pthread_create(&death, NULL, (void *)death_checker, &philos_data[i]);
-//			pthread_create(&waiter, NULL, (void *)waiter_cycle, &philos_data);
+			pthread_create(&death, NULL, (void *)death_checker,
+					&philos_data[i]);
 			philo_life(&philos_data[i]);
 		}
+		data->pid_index = i;
+		pthread_create(&philos_arr[i], NULL, (void *)philo_wait, data);
 		++i;
 	}
-	return (philos_pids);
+	free(philos_arr);
 }
